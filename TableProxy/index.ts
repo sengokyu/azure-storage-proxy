@@ -1,32 +1,41 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
+import { getEntity, upsertEntity, verifyAuth } from "./table-heler";
 
-const setEntity = () => {};
-
-const getEntity = () => {};
-
+/**
+ * main
+ */
 const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
+context.log(req.headers)    ;
+  if (!(await verifyAuth(req.headers.authorization))) {
+    context.res = { status: 401, body: "Invalid authorization header." };
+    return;
+  }
+
   switch (req.method) {
-    case "GET":
-      break;
     case "POST":
+      await upsertEntity(
+        context.bindingData.tableName,
+        context.bindingData.partitionKey,
+        context.bindingData.rowKey,
+        req.body
+      );
+      context.res = { body: "OK" };
+      break;
+    case "GET":
+      const body = await getEntity(
+        context.bindingData.tableName,
+        context.bindingData.partitionKey,
+        context.bindingData.rowKey
+      );
+      context.res = { body };
       break;
     default:
       context.res = { status: 400 };
       break;
   }
-  context.log("HTTP trigger function processed a request.");
-  const name = req.query.name || (req.body && req.body.name);
-  const responseMessage = name
-    ? "Hello, " + name + ". This HTTP triggered function executed successfully."
-    : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
-
-  context.res = {
-    // status: 200, /* Defaults to 200 */
-    body: responseMessage,
-  };
 };
 
 export default httpTrigger;
