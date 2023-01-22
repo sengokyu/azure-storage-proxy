@@ -16,12 +16,13 @@ export const getUserId = async (
     headers: { authorization },
   });
 
-  if (response.ok) {
-    const json = await response.json();
-console.log(json);
+  if (!response.ok) {
+    throw new Error(`Status: ${response.status}`);
+  }
 
-    if (isUserInfo(json)) {
-      return json.id;
-    }
+  const json = await response.json();
+
+  if (isUserInfo(json)) {
+    return json.id;
   }
 };
