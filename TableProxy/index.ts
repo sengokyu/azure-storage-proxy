@@ -1,5 +1,6 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { getEntity, upsertEntity, verifyAuth } from "./table-heler";
+import { getUserId } from "./ms-graph-helper";
+import { getEntity, upsertEntity } from "./table-helper";
 
 /**
  * main
@@ -8,9 +9,13 @@ const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
 ): Promise<void> {
-context.log(req.headers)    ;
-  if (!(await verifyAuth(req.headers.authorization))) {
-    context.res = { status: 401, body: "Invalid authorization header." };
+  const userId = await getUserId(req.headers.authorization);
+
+  if (!userId) {
+    context.res = {
+      status: 400,
+      body: "Cannot retrieve user info. Invalid access token ?",
+    };
     return;
   }
 
@@ -18,7 +23,7 @@ context.log(req.headers)    ;
     case "POST":
       await upsertEntity(
         context.bindingData.tableName,
-        context.bindingData.partitionKey,
+        userId,
         context.bindingData.rowKey,
         req.body
       );
@@ -27,7 +32,7 @@ context.log(req.headers)    ;
     case "GET":
       const body = await getEntity(
         context.bindingData.tableName,
-        context.bindingData.partitionKey,
+        userId,
         context.bindingData.rowKey
       );
       context.res = { body };

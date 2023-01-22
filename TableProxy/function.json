@@ -6,7 +6,7 @@
       "direction": "in",
       "name": "req",
       "methods": ["get", "post"],
-      "route": "{tableName}/{partitionKey}/{rowKey}"
+      "route": "{tableName}/{rowKey}"
     },
     {
       "type": "http",

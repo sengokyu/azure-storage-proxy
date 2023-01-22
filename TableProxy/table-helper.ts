@@ -11,16 +11,6 @@ const createClient = (tableName: string): TableClient =>
     allowInsecureConnection: url.startsWith("http://"),
   });
 
-export const verifyAuth = async (authValue: string): Promise<boolean> => {
-  const response = await fetch("https://graph.microsoft.com/v1.0/me", {
-    headers: {
-      Authorization: authValue,
-    },
-  });
-
-  return response.ok;
-};
-
 export const upsertEntity = (
   tableName: string,
   partitionKey: string,
