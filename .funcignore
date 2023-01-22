@@ -2,6 +2,8 @@
 *.ts
 .git*
 .vscode
-local.settings.json
+docker-compose.yml
+local.settings.*
 test
-getting_started.md
+tsconfig.json
+README.md
