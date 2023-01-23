@@ -25,6 +25,6 @@ npm run start
 Call the function.
 
 ```console
-curl -X POST -d '{"foo":123}' --oauth2-bearer 'Your access token' http://localhost:7071/api/Your_table_name/Your_row_key
-curl --oauth2-bearer 'Your access token' http://localhost:7071/api/Your_table_name/Your_row_key
+curl -X POST -d '{"foo":123}' --oauth2-bearer 'Your access token' http://localhost:7071/api/table/Your_table_name/Your_row_key
+curl --oauth2-bearer 'Your access token' http://localhost:7071/api/table/Your_table_name/Your_row_key
 ```
