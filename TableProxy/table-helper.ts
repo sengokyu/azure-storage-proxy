@@ -1,5 +1,4 @@
 import { AzureNamedKeyCredential, TableClient } from "@azure/data-tables";
-import fetch from "node-fetch";
 
 const url = process.env["STORAGE_ACCOUNT_URL"]!;
 const account = process.env["ACCOUNT"]!;
